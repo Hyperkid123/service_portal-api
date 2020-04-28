@@ -20,6 +20,19 @@ module Api
 
         portfolio.update!(params_for_update)
 
+        # publish update portfolio message
+        payload = {
+          :id => portfolio.id,
+          :external_tenant => portfolio.tenant.external_tenant,
+          :tenant => portfolio.tenant.id,
+          :event => "portfolio.update"
+        }
+        messaging_client.publish_topic(
+          :service => "test",
+          :event   => "Portfolio.update",
+          :payload => payload
+        )
+
         render :json => portfolio
       end
 

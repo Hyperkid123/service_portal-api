@@ -45,4 +45,15 @@ class ApplicationController < ActionController::API
   def pundit_user
     UserContext.current_user_context
   end
+
+  def messaging_client
+    require "manageiq-messaging"
+
+    @messaging_client ||= ManageIQ::Messaging::Client.open({
+      :protocol => :Kafka,
+      :host     => "localhost",
+      :port     => "9092",
+      :encoding => "json"
+    })
+  end
 end
